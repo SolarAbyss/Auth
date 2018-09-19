@@ -4,13 +4,13 @@
     "license": "license",
     "authors": [
         {
-            "name": "author name",
-            "email": "author email",
-            "homepage": "author homepage"
+            "name": "Ryan Hein",
+            "email": "ryan@solarabyss.com",
+            "homepage": "https://www.solarabyss.com"
         }
     ],
     "homepage": "https://github.com/solarabyss/auth",
-    "keywords": ["Laravel", "Auth"],
+    "keywords": ["Laravel", "Auth", "Solar Abysss"],
     "require": {
         "illuminate/support": "~5"
     },
