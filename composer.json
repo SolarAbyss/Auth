@@ -31,10 +31,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "SolarAbyss\\Auth\\AuthServiceProvider"
+                "SolarAbyss\\Auth\\SolarizeServiceProvider"
             ],
             "aliases": {
-                "Auth": "SolarAbyss\\Auth\\Facades\\Auth"
+                "Auth": "SolarAbyss\\Auth\\Facades\\Solarize"
             }
         }
     }
