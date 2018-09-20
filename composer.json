@@ -34,7 +34,7 @@
                 "SolarAbyss\\Auth\\SolarizeServiceProvider"
             ],
             "aliases": {
-                "Auth": "SolarAbyss\\Auth\\Facades\\Solarize"
+                "Solarize": "SolarAbyss\\Auth\\Facades\\Solarize"
             }
         }
     }
