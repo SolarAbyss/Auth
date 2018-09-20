@@ -4,7 +4,7 @@ namespace SolarAbyss\Auth;
 
 use Illuminate\Support\ServiceProvider;
 
-class AuthServiceProvider extends ServiceProvider
+class SolarizeServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
@@ -23,7 +23,7 @@ class AuthServiceProvider extends ServiceProvider
 
             // Publishing the configuration file.
             $this->publishes([
-                __DIR__.'/../config/auth.php' => config_path('auth.php'),
+                __DIR__.'/../config/identity.php' => config_path('identity.php'),
             ], 'auth.config');
 
             // Publishing the views.
@@ -53,11 +53,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/auth.php', 'auth');
+        $this->mergeConfigFrom(__DIR__.'/../config/identity.php', 'solarize');
 
         // Register the service the package provides.
-        $this->app->singleton('auth', function ($app) {
-            return new Auth;
+        $this->app->singleton('solarize', function ($app) {
+            return new Solarize;
         });
     }
 
@@ -68,6 +68,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['auth'];
+        return ['solarize'];
     }
 }

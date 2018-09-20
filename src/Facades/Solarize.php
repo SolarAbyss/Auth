@@ -4,7 +4,7 @@ namespace SolarAbyss\Auth\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Auth extends Facade
+class Solarize extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class Auth extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'auth';
+        return 'solarize';
     }
 }
