@@ -10,7 +10,7 @@ class Solarize
         
         $client = new GuzzleClient();
         
-        $host = config('identity.host');
+        $host = config('identity.host') . '/oauth/token';
         $client_id = config('identity.client_id');
         $client_secret = config('identity.client_secret');
 
