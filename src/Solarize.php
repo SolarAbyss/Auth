@@ -105,14 +105,12 @@ class Solarize
 
         $profile = [
             'name' => $body->name,
-            'email' => $body->email
         ];
         
         $user = User::where('provider_id', '=', $this->provider_id)->first();
         if ($user === null) {
             $user = new User([
                 'email' => $body->email,
-                'name' => $body->name
             ]);
             $user->provider_id = $this->provider_id;
             $profile = new Profile($profile);

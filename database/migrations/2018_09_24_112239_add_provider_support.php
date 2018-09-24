@@ -16,7 +16,9 @@ class AddProviderSupport extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->integer('provider_id')->after('id')->unsigned();
             $table->integer('profile_id')->after('provider_id')->unsigned();
+            $table->text('refresh_token')->nullable();
             $table->dropColumn('password');
+            $table->dropColumn('name');
 
             $table->foreign('profile_id')
                 ->references('id')
@@ -35,6 +37,7 @@ class AddProviderSupport extends Migration
         Schema::table('users', function($table) {
             $table->dropColumn('provider_id');
             $table->dropColumn('profile_id');
+            $table->dropColumn('refresh_token');
         });
     }
 }
