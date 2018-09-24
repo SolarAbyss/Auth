@@ -99,7 +99,7 @@ class Solarize
     }
 
 
-    private function attemptRegisterProvider($data) {
+    private function attemptRegisterProvider() {
 
         $body = $this->body[0];
 
