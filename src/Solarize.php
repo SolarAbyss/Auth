@@ -6,6 +6,9 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Request;
 use App\User;
 
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
 class Solarize
 {
 
@@ -160,23 +163,31 @@ class Solarize
 
     public function SyncPermissionsAndRoles() {
 
-        $response = $this->client->request('POST', 'oauth/token', ['form_params' => [
+        $response = json_decode($this->client->request('POST', 'oauth/token', ['form_params' => [
             'client_id' => $this->client_id, 
             'client_secret' => $this->client_secret, 
-            'response_type' => 'client_credentials',
+            'grant_type' => 'client_credentials',
             'scope' => '*',
-        ]]);
+        ]])->getBody());
 
         $headers = [
             'Authorization' => 'Bearer ' . $response->access_token,        
             'Accept'        => 'application/json',
         ];
 
-        $response = $this->client->request('POST', 'api/permissions', [
+        $roles = json_decode($this->client->request('POST', 'api/permissions', [
             'headers' => $headers
-        ]);
+        ])->getBody());
 
-        dd($response);
+        app()['cache']->forget('spatie.permission.cache');
+
+        foreach($roles as $role) {
+            $role = Role::create(['name' => $role->name, 'guard_name' => $role->guard_name]);
+            foreach($role->permissions as $permission) {
+                Permission::create(['name' => $permission->name]);
+                $role ->givePermissionTo($permission->name);
+            }
+        }
 
     }
 }
