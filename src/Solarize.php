@@ -158,4 +158,25 @@ class Solarize
         return true;
     }
 
+    public function SyncPermissionsAndRoles() {
+
+        $response = $this->client->request('POST', 'oauth/token', ['form_params' => [
+            'client_id' => $this->client_id, 
+            'client_secret' => $this->client_secret, 
+            'response_type' => 'client_credentials',
+            'scope' => '*',
+        ]]);
+
+        $headers = [
+            'Authorization' => 'Bearer ' . $response->access_token,        
+            'Accept'        => 'application/json',
+        ];
+
+        $response = $this->client->request('POST', 'api/permissions', [
+            'headers' => $headers
+        ]);
+
+        dd($response);
+
+    }
 }
