@@ -26,6 +26,11 @@ class SolarizeServiceProvider extends ServiceProvider
                 __DIR__.'/../config/identity.php' => config_path('identity.php'),
             ], 'auth.config');
 
+            // Publishing the migration files.
+            $this->publishes([
+                __DIR__.'/../database/migrations' => public_path('database/migrations'),
+            ]);
+
             // Publishing the views.
             /*$this->publishes([
                 __DIR__.'/../resources/views' => base_path('resources/views/vendor/solarabyss'),
