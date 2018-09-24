@@ -107,13 +107,15 @@ class Solarize
             'name' => $body->name,
             'email' => $body->email
         ];
-
+        
         $user = User::where('provider_id', '=', $this->provider_id)->first();
         if ($user === null) {
             $user = new User([
                 'email' => $body->email,
             ]);
-            $user->profile()->associate(new Profile($profile));
+            $profile = (new Profile($profile))->save();
+            $user->profile()->associate($profile->id);
+            $user->save();
         } else {
             $user->email = $body->email;
             $user->profile->fill($profile);
