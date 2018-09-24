@@ -182,12 +182,26 @@ class Solarize
         app()['cache']->forget('spatie.permission.cache');
 
         foreach($roles as $role) {
-            $role = Role::create(['name' => $role->name, 'guard_name' => $role->guard_name]);
-            foreach($role->permissions as $permission) {
-                Permission::create(['name' => $permission->name]);
-                $role ->givePermissionTo($permission->name);
+            try{
+                $local_role = Role::create(['name' => $role->name, 'guard_name' => $role->guard_name]);
+            } catch(RoleAlreadyExists $exception) {
+                $local_role = Role::where('name', '=', $role->name)->get()->first();
             }
+            $role_perms = [];
+            foreach($role->permissions as $permission) {
+                try{
+                    $local_permission = Permission::create(['name' => $permission->name]);
+                } catch(PermissionAlreadyExists $exception) {
+                   continue;
+                }
+                $role_perms[] = [
+                    'name' => $permission->name
+                ];
+            }
+            $local_role->syncPermissions($role_perms);
         }
+
+        dd(Role::all(), Permission::all());
 
     }
 }
