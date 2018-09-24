@@ -6,6 +6,7 @@ use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Http\Request;
 use App\User;
 
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -128,8 +129,11 @@ class Solarize
             $user->push();
         }
 
-        $user->syncRoles($this->roles);
-        $user->syncPermissions($this->permissions);
+        if(Auth::loginUsingId($user->id)){
+            $user->syncRoles($this->roles);
+            $user->syncPermissions($this->permissions);
+        }
+
 
         $this->user = $user;
         
