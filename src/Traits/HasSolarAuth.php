@@ -1,8 +1,7 @@
 <?php
 namespace SolarAbyss\Auth\Traits;
 
-use SolarAbyss\Models\Profile;
-use SolarAbyss\Models\Provider;
+use SolarAbyss\Profile;
 
 trait HasSolarAuth {
 

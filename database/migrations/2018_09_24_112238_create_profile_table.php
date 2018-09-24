@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProfileTable_20180924112238 extends Migration
+class CreateProfileTable extends Migration
 {
     /**
      * Run the migrations.
