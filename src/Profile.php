@@ -1,6 +1,6 @@
 <?php
 
-namespace SolarAbyss\Models;
+namespace SolarAbyss\Auth;
 
 use Illuminate\Database\Eloquent\Model;
 use App\User;
