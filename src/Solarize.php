@@ -112,8 +112,11 @@ class Solarize
         if ($user === null) {
             $user = new User([
                 'email' => $body->email,
+                'name' => $body->name
             ]);
-            $profile = (new Profile($profile))->save();
+            $user->provider_id = $this->provider_id;
+            $profile = new Profile($profile);
+            $profile->save();
             $user->profile()->associate($profile->id);
             $user->save();
         } else {

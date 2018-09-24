@@ -18,11 +18,6 @@ class AddProviderSupport extends Migration
             $table->integer('profile_id')->after('provider_id')->unsigned();
             $table->dropColumn('password');
 
-            $table->foreign('provider_id')
-                ->references('id')
-                ->on('providers')
-                ->onDelete('cascade');
-
             $table->foreign('profile_id')
                 ->references('id')
                 ->on('profiles')
