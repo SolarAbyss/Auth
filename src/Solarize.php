@@ -94,6 +94,8 @@ class Solarize
         $this->access_token = $body->access_token;
         $this->refresh_token = $body->refresh_token;
         $this->expires_in = $body->expires_in;
+        $this->permissions = $body->permissions;
+        $this->roles = $body->roles;
 
         return $this;
     }
@@ -122,6 +124,9 @@ class Solarize
             $user->profile->fill($profile);
             $user->push();
         }
+
+        $user->syncRoles($this->roles);
+        $user->syncPermissions($this->permissions);
 
         $this->user = $user;
         
