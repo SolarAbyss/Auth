@@ -13,6 +13,7 @@ class Solarize
     protected $client_id;
     protected $client_secret;    
     protected $host;
+    protected $data;
     protected $provider_id;
     protected $access_token;
     protected $refresh_token;
@@ -98,22 +99,23 @@ class Solarize
     }
 
 
-    private function attemptRegisterProvider() {
+    private function attemptRegisterProvider($data) {
+
+        $body = $this->body[0];
 
         $profile = [
-            'name' => $this->data->name,
-            'email' => $this->data->email
+            'name' => $body->name,
+            'email' => $body->email
         ];
 
         $user = User::where('provider_id', '=', $this->provider_id)->first();
         if ($user === null) {
             $user = new User([
-                'email' => $this->data->email,
+                'email' => $body->email,
             ]);
             $user->profile()->associate(new Profile($profile));
         } else {
-            // Update user's profile with data from the server.
-            $user->email = $this->data->email;
+            $user->email = $body->email;
             $user->profile->fill($profile);
             $user->push();
         }
