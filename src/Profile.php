@@ -7,7 +7,10 @@ use App\User;
 
 class Profile extends Model
 {
+
+    protected $fillable = ['name', 'email'];
+
     public function users() {
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
     }
 }
