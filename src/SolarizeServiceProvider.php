@@ -28,7 +28,7 @@ class SolarizeServiceProvider extends ServiceProvider
 
             // Publishing the migration files.
             $this->publishes([
-                __DIR__.'/../database/migrations' => public_path('database/migrations'),
+                __DIR__.'/../database/migrations' => database_path('migrations'),
             ]);
 
             // Publishing the views.

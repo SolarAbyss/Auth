@@ -101,19 +101,19 @@ class Solarize
     private function attemptRegisterProvider() {
 
         $profile = [
-            'name' => $data->name,
-            'email' => $data->email
+            'name' => $this->data->name,
+            'email' => $this->data->email
         ];
 
         $user = User::where('provider_id', '=', $this->provider_id)->first();
         if ($user === null) {
             $user = new User([
-                'email' => $data->email,
+                'email' => $this->data->email,
             ]);
             $user->profile()->associate(new Profile($profile));
         } else {
             // Update user's profile with data from the server.
-            $user->email = $data->email;
+            $user->email = $this->data->email;
             $user->profile->fill($profile);
             $user->push();
         }
