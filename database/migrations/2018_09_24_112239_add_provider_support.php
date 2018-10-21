@@ -35,9 +35,13 @@ class AddProviderSupport extends Migration
     public function down()
     {
         Schema::table('users', function($table) {
+            $table->dropForeign(['provider_id']);
             $table->dropColumn('provider_id');
             $table->dropColumn('profile_id');
             $table->dropColumn('refresh_token');
+
+            $table->string('name');
+            $table->string('password');
         });
     }
 }

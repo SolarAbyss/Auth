@@ -208,4 +208,18 @@ class Solarize
         dd(Role::all(), Permission::all());
 
     }
+
+    public function checkIfUsernameExists(Request $request) {
+        return $this->checkIfExists('username', $request->email, Profile::class);
+    }
+
+    public function checkIfEmailExists(Request $request) {
+        return $this->checkIfExists('email', $request->email);
+    }
+    
+    public function checkIfExists($property, $value, $model = null){
+        $model = $model ? app($model) : app(User::class);
+        return response()->json(['exists' => $model->where($property, '=', $value)->exists()]);
+    }
+
 }
