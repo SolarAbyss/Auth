@@ -25,6 +25,7 @@ class Solarize
     protected $recent_status_code;
     protected $errors;
     protected $user;
+    protected $repsonse;
 
     public function __construct($host = null) {
         $this->init($host);
@@ -213,8 +214,12 @@ class Solarize
         return $this->checkIfExists('username', $request->email, Profile::class);
     }
 
-    public function checkIfEmailExists(Request $request) {
-        return $this->checkIfExists('email', $request->email);
+    public function checkIfEmailExists($email) {
+
+        return json_decode($this->client->request('POST', 'api/users/exists/email', ['form_params' => [
+            'email' => $email, 
+        ]])->getBody());
+
     }
     
     public function checkIfExists($property, $value, $model = null){
