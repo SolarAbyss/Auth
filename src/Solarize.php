@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\User;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -106,12 +107,45 @@ class Solarize
     }
 
 
+    private function registerProvider($user_provider, $username) {
+
+        $user_attributes = $user_provider->attributes;
+
+        $profile = [
+            'name' => $user_attributes->name,
+            'username' => $username
+        ];
+        
+        $user = User::where('provider_id', '=', $user_provider->id)->first();
+        if ($user === null) {
+            DB::transaction(function () use ($user_attributes, $user_provider, $profile, $username) {
+                $user = new User([ 
+                    'email' => $user_attributes->email,
+                    'provider_id' => $user_provider->id,
+                ]);
+                $profile = new Profile($profile);
+                $profile->save();
+                $user->profile()->associate($profile->id);
+                $user->save();
+                $this->user = $user;
+            });
+        } else {
+            $user->email = $email;
+            $user->profile->fill($profile);
+            $user->push();
+            $this->user = $user;
+        }
+
+        return $this->user;
+    }
+
     private function attemptRegisterProvider() {
 
         $body = $this->body[0];
 
         $profile = [
             'name' => $body->name,
+            'username' => 'admin'
         ];
         
         $user = User::where('provider_id', '=', $this->provider_id)->first();
@@ -137,7 +171,6 @@ class Solarize
 
 
         $this->user = $user;
-        
         return $this;
 
     }
@@ -210,8 +243,53 @@ class Solarize
 
     }
 
-    public function checkIfUsernameExists(Request $request) {
-        return $this->checkIfExists('username', $request->email, Profile::class);
+    public function createUser($args) {
+        $request = new Request();
+        $request->replace($args);
+        $request->setMethod('POST');
+        return $this->register($request);
+    }
+
+    /**
+     * Account Creation with SolarAbyss Identity Server
+     */
+    public function register(Request $request) {
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => 'required|unique:profiles|max:255',
+            'email' => 'required|unique:users|max:255',
+            'password' => 'required|confirmed|min:6',
+        ]);
+
+        $response = $this->identityRequest('api/auth/register', $request->all());
+        $user = $this->registerProvider($response->user, $request->username);
+        $auth_token = $response->token;
+        return compact('user', 'auth_token');
+    }
+
+    private function identityRequest($endpoint, $params = [], $type = 'POST', $grant_type = 'client_credentials', $scope = '*'){
+        
+        $forum_params = array_merge(
+            [
+                'client_id' => $this->client_id, 
+                'client_secret' => $this->client_secret, 
+                'grant_type' => $grant_type,
+                'scope' => $scope,
+            ],
+            $params
+        );
+
+        $headers = [
+            'Accept'  => 'application/json',
+        ];
+
+        return json_decode($this->client->request($type, $endpoint, ['headers' => $headers, 'form_params' => $forum_params])->getBody());
+    }
+
+    public function checkIfUsernameExists($username)
+    {
+        return $this->checkIfExists('username', $username, Profile::class);
     }
 
     public function checkIfEmailExists($email) {
@@ -224,7 +302,7 @@ class Solarize
     
     public function checkIfExists($property, $value, $model = null){
         $model = $model ? app($model) : app(User::class);
-        return response()->json(['exists' => $model->where($property, '=', $value)->exists()]);
+        return ['exists' => $model->where($property, '=', $value)->exists() ?? false];
     }
 
 }

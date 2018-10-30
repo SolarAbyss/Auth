@@ -12,7 +12,7 @@ class Profile extends Model implements HasMedia
 {
     use HasMediaTrait;
 
-    protected $fillable = ['name', 'email'];
+    protected $fillable = ['name', 'email', 'username'];
 
     public function user() {
         return $this->hasOne(User::class);
